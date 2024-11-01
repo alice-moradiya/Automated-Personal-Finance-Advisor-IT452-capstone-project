@@ -30,13 +30,10 @@ function Navbar() {
                 <a>Dashboard</a>
               </li>
               <li>
-                <a>Budget</a>
+                <a>Financial Goals</a>
               </li>
               <li>
-                <a>Goals</a>
-              </li>
-              <li>
-                <a>Insights</a>
+                <a>Advice</a>
               </li>
               <li>
                 <a>Profile</a>
@@ -48,15 +45,20 @@ function Navbar() {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <a>Item 1</a>
+              <a>Dashboard</a>
             </li>
-
             <li>
-              <a>Item 3</a>
+              <a>Financial Goals</a>
+            </li>
+            <li>
+              <a>Advice</a>
+            </li>
+            <li>
+              <a>Profile</a>
             </li>
           </ul>
 
-          {/* profile picture thing */}
+          {/* profile picture */}
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
