@@ -1,59 +1,126 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(1);
+
+  //  change slides every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev === 4 ? 1 : prev + 1));
+    }, 3000); //
+    return () => clearInterval(interval); // Cleanup interval on unmount
+  }, []);
+
+  const navigateToSlide = (slideNumber) => {
+    setCurrentSlide(slideNumber);
+    const targetSlide = document.querySelector(`#slide${slideNumber}`);
+    if (targetSlide) {
+      targetSlide.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <div>
       {/* Carousel */}
-      <div id="carousel" className="carousel w-full h-80 ">
-        <div id="slide1" className="carousel-item relative w-full">
+      <div id="carousel" className="carousel w-full h-80">
+        {/* Slide 1 */}
+        <div
+          id="slide1"
+          className={`carousel-item relative w-full ${
+            currentSlide === 1 ? "block" : "hidden"
+          }`}
+        >
           <img src="/photo1.png" className="w-full" alt="Slide 1" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide4" className="btn btn-circle">
+            <button
+              onClick={() => navigateToSlide(4)}
+              className="btn btn-circle"
+            >
               ❮
-            </a>
-            <a href="#slide2" className="btn btn-circle">
+            </button>
+            <button
+              onClick={() => navigateToSlide(2)}
+              className="btn btn-circle"
+            >
               ❯
-            </a>
+            </button>
           </div>
         </div>
-        <div id="slide2" className="carousel-item relative w-full">
+
+        {/* Slide 2 */}
+        <div
+          id="slide2"
+          className={`carousel-item relative w-full ${
+            currentSlide === 2 ? "block" : "hidden"
+          }`}
+        >
           <img src="/photo2.jpg" className="w-full" alt="Slide 2" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide1" className="btn btn-circle">
+            <button
+              onClick={() => navigateToSlide(1)}
+              className="btn btn-circle"
+            >
               ❮
-            </a>
-            <a href="#slide3" className="btn btn-circle">
+            </button>
+            <button
+              onClick={() => navigateToSlide(3)}
+              className="btn btn-circle"
+            >
               ❯
-            </a>
+            </button>
           </div>
         </div>
-        <div id="slide3" className="carousel-item relative w-full">
-          <img src="photo3.jpg" className="w-full" alt="Slide 3" />
+
+        {/* Slide 3 */}
+        <div
+          id="slide3"
+          className={`carousel-item relative w-full ${
+            currentSlide === 3 ? "block" : "hidden"
+          }`}
+        >
+          <img src="/photo3.jpg" className="w-full" alt="Slide 3" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide2" className="btn btn-circle">
+            <button
+              onClick={() => navigateToSlide(2)}
+              className="btn btn-circle"
+            >
               ❮
-            </a>
-            <a href="#slide4" className="btn btn-circle">
+            </button>
+            <button
+              onClick={() => navigateToSlide(4)}
+              className="btn btn-circle"
+            >
               ❯
-            </a>
+            </button>
           </div>
         </div>
-        <div id="slide4" className="carousel-item relative w-full">
+
+        {/* Slide 4 */}
+        <div
+          id="slide4"
+          className={`carousel-item relative w-full ${
+            currentSlide === 4 ? "block" : "hidden"
+          }`}
+        >
           <img
             src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
             className="w-full"
             alt="Slide 4"
           />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide3" className="btn btn-circle">
+            <button
+              onClick={() => navigateToSlide(3)}
+              className="btn btn-circle"
+            >
               ❮
-            </a>
-            <a href="#slide1" className="btn btn-circle">
+            </button>
+            <button
+              onClick={() => navigateToSlide(1)}
+              className="btn btn-circle"
+            >
               ❯
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -130,12 +197,12 @@ const Dashboard = () => {
 
       {/* Get Started Button */}
       <div className="text-center mt-12">
-        <button
-          onClick={() => navigate("/goals")}
-          className="btn btn-primary hover:bg-blue-700 transition-all duration-300"
+        <Link
+          to="/goals"
+          className="btn btn-primary hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all duration-300"
         >
           Get Started
-        </button>
+        </Link>
       </div>
 
       {/* Stats */}
@@ -160,7 +227,7 @@ const Dashboard = () => {
             </svg>
           </div>
           <div className="stat-title">Total Likes</div>
-          <div className="stat-value text-primary">25.6K</div>
+          <div className="stat-value text-primary">178</div>
           <div className="stat-desc">21% more than last month</div>
         </div>
 
@@ -181,20 +248,18 @@ const Dashboard = () => {
             </svg>
           </div>
           <div className="stat-title">Page Views</div>
-          <div className="stat-value text-secondary">2.6M</div>
+          <div className="stat-value text-secondary">1.7K</div>
           <div className="stat-desc">21% more than last month</div>
         </div>
 
         {/* Hide this stat on smaller screens */}
         <div className="stat hidden sm:block">
-          <div className="stat-figure text-secondary">
-            <div className="avatar online">
-
-            </div>
+          <div className="stat-figure text-secondary"></div>
+          <div className="stat place-items-center">
+            <div className="stat-title">New Users</div>
+            <div className="stat-value">1,20</div>
+            <div className="stat-desc text-secondary">↗︎ 27 (14%)</div>
           </div>
-          <div className="stat-value">86%</div>
-          <div className="stat-title">Tasks Done</div>
-          <div className="stat-desc text-secondary">31 tasks remaining</div>
         </div>
       </div>
 
@@ -217,8 +282,35 @@ const Dashboard = () => {
           </svg>
           <p>Copyright © {new Date().getFullYear()} - All rights reserved</p>
         </aside>
+        <p className="justify-center text-xl from-neutral-100 font-bold ">
+          Developed by Alice Moradiya
+        </p>
         <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-          <a>
+          <a
+            href="https://alicemoradiya.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16.5 8.25L21 12l-4.5 3.75M7.5 8.25L3 12l4.5 3.75M14.25 4.5l-4.5 15"
+              />
+            </svg>
+          </a>
+          <a
+            href="https://alicemoradiya.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -229,18 +321,11 @@ const Dashboard = () => {
               <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
             </svg>
           </a>
-          <a>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              className="fill-current"
-            >
-              <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-            </svg>
-          </a>
-          <a>
+          <a
+            href="https://alicemoradiya.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
