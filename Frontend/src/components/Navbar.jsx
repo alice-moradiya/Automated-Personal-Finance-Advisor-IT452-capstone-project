@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
@@ -6,10 +7,11 @@ function Navbar() {
       <div className="navbar bg-base-100">
         <div className="navbar-start">
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <div tabIndex={0} role="button" className="btn btn-ghost">
+              
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-7 w-7"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -24,72 +26,25 @@ function Navbar() {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 shadow"
             >
               <li>
-                <a>Dashboard</a>
+                <Link to="/">Dashboard</Link>
               </li>
               <li>
-                <a>Financial Goals</a>
+                <Link to="/goals">Financial Goals</Link>
               </li>
               <li>
-                <a>Advice</a>
+                <Link to="/">Advice</Link>
               </li>
               <li>
-                <a>Profile</a>
+                <Link to="/">Profile</Link>
               </li>
             </ul>
           </div>
-          <a className="text-xl font-bold cursor-pointer">Finance Advisor</a>
-        </div>
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <a>Dashboard</a>
-            </li>
-            <li>
-              <a>Financial Goals</a>
-            </li>
-            <li>
-              <a>Advice</a>
-            </li>
-            <li>
-              <a>Profile</a>
-            </li>
-          </ul>
-
-          {/* profile picture */}
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
-              </div>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <a className="justify-between">
-                  Profile
-                  <span className="badge">New</span>
-                </a>
-              </li>
-              <li>
-                <a>Settings</a>
-              </li>
-              <li>
-                <a>Logout</a>
-              </li>
-            </ul>
-          </div>
+          <Link to="/" className="text-2xl sm:text-2xl sm:px-4 font-bold cursor-pointer ">
+            Finance Advisor
+          </Link>
         </div>
       </div>
     </>

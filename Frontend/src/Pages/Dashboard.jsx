@@ -6,16 +6,10 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* Navbar */}
-
       {/* Carousel */}
-      <div id="carousel" className="carousel w-full mt-4">
+      <div id="carousel" className="carousel w-full h-80 ">
         <div id="slide1" className="carousel-item relative w-full">
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
-            className="w-full"
-            alt="Slide 1"
-          />
+          <img src="/photo1.png" className="w-full" alt="Slide 1" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <a href="#slide4" className="btn btn-circle">
               ❮
@@ -26,11 +20,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div id="slide2" className="carousel-item relative w-full">
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
-            className="w-full"
-            alt="Slide 2"
-          />
+          <img src="/photo2.jpg" className="w-full" alt="Slide 2" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <a href="#slide1" className="btn btn-circle">
               ❮
@@ -41,11 +31,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div id="slide3" className="carousel-item relative w-full">
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
-            className="w-full"
-            alt="Slide 3"
-          />
+          <img src="photo3.jpg" className="w-full" alt="Slide 3" />
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
             <a href="#slide2" className="btn btn-circle">
               ❮
@@ -73,12 +59,14 @@ const Dashboard = () => {
       </div>
 
       {/* Timeline */}
-      <div id="timeline" className="mt-12">
+      <div id="timeline" className="container mx-auto mt-12 px-4">
         <h2 className="text-2xl font-bold text-center mb-4">How It Works</h2>
-        <ul className="timeline">
-          <li>
-            <div className="timeline-start timeline-box">Dashboard</div>
-            <div className="timeline-middle">
+        <ul className="timeline justify-center ">
+          <li className="flex flex-col sm:flex-row items-center">
+            <div className="timeline-start timeline-box text-center sm:text-left w-full sm:w-full">
+              Dashboard
+            </div>
+            <div className="timeline-middle flex justify-center items-center w-full sm:w-1/6">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -134,7 +122,7 @@ const Dashboard = () => {
           </li>
           <li>
             <hr />
-            <div className="timeline-end timeline-box">Download Document</div>
+            <div className="timeline-end timeline-box">Download pdf</div>
             <hr />
           </li>
         </ul>
@@ -151,14 +139,17 @@ const Dashboard = () => {
       </div>
 
       {/* Stats */}
-      <div id="stats" className="stats shadow mt-12">
+      <div
+        id="stats"
+        className="stats shadow mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 w-full px-4"
+      >
         <div className="stat">
           <div className="stat-figure text-primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              className="inline-block h-8 w-8 stroke-current"
+              className="inline-block h-8 w-8 stroke-current sm:block hidden"
             >
               <path
                 strokeLinecap="round"
@@ -179,7 +170,7 @@ const Dashboard = () => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              className="inline-block h-8 w-8 stroke-current"
+              className="inline-block h-8 w-8 stroke-current sm:block hidden"
             >
               <path
                 strokeLinecap="round"
@@ -194,15 +185,11 @@ const Dashboard = () => {
           <div className="stat-desc">21% more than last month</div>
         </div>
 
-        <div className="stat">
+        {/* Hide this stat on smaller screens */}
+        <div className="stat hidden sm:block">
           <div className="stat-figure text-secondary">
             <div className="avatar online">
-              <div className="w-16 rounded-full">
-                <img
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  alt="User Avatar"
-                />
-              </div>
+
             </div>
           </div>
           <div className="stat-value">86%</div>
