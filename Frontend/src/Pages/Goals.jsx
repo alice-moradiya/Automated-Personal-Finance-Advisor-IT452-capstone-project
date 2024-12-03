@@ -19,17 +19,18 @@ import {
 const Goals = () => {
   const [goal, setGoal] = useState("");
   const [timeframe, setTimeframe] = useState("");
-  const [monthlyIncome, setMonthlyIncome] = useState("");
-  const [monthlyExpenses, setMonthlyExpenses] = useState("");
+  const [monthlyIncome, setMonthlyIncome] = useState("5000");
+  const [monthlyExpenses, setMonthlyExpenses] = useState("3000");
   const [savings, setSavings] = useState("");
   const [response, setResponse] = useState(null);
+  const [debt, setDebt] = useState("");
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
     const prompt = `
-  Please create a professional and concise personalized financial plan based on the following user inputs. 
+  Please create a professional and concise personalized financial plan based on the following user inputs(Make in depth plan which is also easy for user to understand). 
   Format the response as numbered points for clarity and readability. Avoid adding any signatures, placeholders 
   like [Your Name], or additional elements that are not explicitly requested. Ensure the response is user-friendly 
   and actionable. Include trusted and real online resources(actual site link from internet which is active) for further reading when relevant. Ensure that the response is strictly 
@@ -50,9 +51,20 @@ const Goals = () => {
   - Monthly Expenses: $${
     monthlyExpenses || "Not Provided"
   } (If not provided, ask for expense details to analyze the budget.)
+  - Total Debt: $${
+    debt || "Not Provided"
+  } (If not provided, suggest assessing total debt to determine financial health.)
   - Current Savings: $${
     savings || "Not Provided"
   } (If not provided, suggest estimating current savings.)
+
+  **Debt-to-Income Ratio**: 
+  - Based on the provided data, calculate the Debt-to-Income (DTI) Ratio as follows: 
+    \`DTI = (Total Debt / Monthly Income) x 100\`. 
+    Compare the result with the recommended maximum DTI of 36% for financial stability. 
+    - If the user's DTI exceeds 36%, provide strategies to lower it (e.g., reducing debt, increasing income, or prioritizing high-interest debt).
+    - If the DTI is below 36%, highlight the user's healthy financial standing and suggest ways to leverage this stability for financial goals.
+    - always use you or your DTI ratio wherever reffering to user.
 
   Please note:
   1. Ensure the response focuses solely on the user's input and the requested financial advice.
@@ -68,7 +80,7 @@ const Goals = () => {
         {
           model: "gpt-3.5-turbo",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 1000,
+          max_tokens: 1800,
         },
         {
           headers: {
@@ -110,6 +122,11 @@ const Goals = () => {
   }));
 
   const COLORS = ["#6D83F2", "#F26292", "#F5A623"];
+
+  const debtToIncomeRatio =
+    Number(monthlyIncome) > 0
+      ? ((Number(debt) / Number(monthlyIncome)) * 100).toFixed(2)
+      : 0;
 
   const generatePDF = async () => {
     const doc = new jsPDF("p", "mm", "a4");
@@ -178,197 +195,241 @@ const Goals = () => {
   };
 
   return (
-    <div className="p-8 bg-gradient-to-b from-blue-100 to-blue-300 min-h-screen">
-      <h1 className="text-4xl font-extrabold mb-8 text-center text-blue-800 hover:scale-105 transition-transform">
-        Set Your Financial Goals
-      </h1>
+    <div className="relative min-h-screen">
+      {/* Background */}
+      {/* <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm"
+        style={{
+          backgroundImage: "url('/bg.jpg')",
+        }}
+      ></div> */}
+      <div className="p-8 bg-gray-100 min-h-screen">
+        <h1 className="text-4xl font-bold mb-8 text-center text-black hover:scale-105 transition-transform">
+          Set Your Financial <span className="text-pink-500">Goals </span>
+        </h1>
 
-      <form
-        onSubmit={handleFormSubmit}
-        className="card w-full lg:w-2/3 mx-auto bg-white shadow-2xl rounded-lg p-8"
-      >
-        <div className="form-control mb-6">
-          <label className="label">
-            <span className="label-text text-gray-700 text-lg font-semibold">
-              What is your primary financial goal?
-            </span>
-          </label>
-          <input
-            type="text"
-            placeholder="e.g., Save for an emergency fund of $40,000, buy a house worth $250,000"
-            value={goal}
-            onChange={(e) => setGoal(e.target.value)}
-            className="input input-bordered w-full hover:shadow-lg transition-all"
-          />
-          <p className="text-sm text-gray-500 mt-2">
-            Tip: Be specific about your goal for better advice. For example,
-            "Build a retirement fund of $500,000 by age 60,' or 'Save $10,000
-            for a dream vacation in the next 12 months."
-          </p>
-        </div>
-
-        <div className="form-control mb-6">
-          <label className="label">
-            <span className="label-text text-gray-700 text-lg font-semibold">
-              Timeframe to achieve your goal (in months)
-            </span>
-          </label>
-          <input
-            type="number"
-            placeholder="e.g., 12"
-            value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value)}
-            className="input input-bordered w-full hover:shadow-lg transition-all"
-          />
-        </div>
-
-        <div className="form-control mb-6">
-          <label className="label">
-            <span className="label-text text-gray-700 text-lg font-semibold">
-              Monthly Income
-            </span>
-          </label>
-          <input
-            type="number"
-            placeholder="Enter your monthly income"
-            value={monthlyIncome}
-            onChange={(e) => setMonthlyIncome(e.target.value)}
-            className="input input-bordered w-full hover:shadow-lg transition-all"
-          />
-        </div>
-
-        <div className="form-control mb-6">
-          <label className="label">
-            <span className="label-text text-gray-700 text-lg font-semibold">
-              Monthly Expenses
-            </span>
-          </label>
-          <input
-            type="number"
-            placeholder="Enter your monthly expenses"
-            value={monthlyExpenses}
-            onChange={(e) => setMonthlyExpenses(e.target.value)}
-            className="input input-bordered w-full hover:shadow-lg transition-all"
-          />
-        </div>
-
-        <div className="form-control mb-6">
-          <label className="label">
-            <span className="label-text text-gray-700 text-lg font-semibold">
-              Current Savings
-            </span>
-          </label>
-          <input
-            type="number"
-            placeholder="Enter your total savings"
-            value={savings}
-            onChange={(e) => setSavings(e.target.value)}
-            className="input input-bordered w-full hover:shadow-lg transition-all"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="btn btn-primary w-full mt-4 text-lg py-2 sm:py-3 md:py-[clamp(0.5rem, 2vw, 1.5rem)] leading-normal hover:scale-105 active:scale-95 transition-transform"
+        <form
+          onSubmit={handleFormSubmit}
+          className="card w-full lg:w-2/3 mx-auto bg-white shadow-2xl rounded-lg p-8"
         >
-          Build My Financial Strategy
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text text-gray-700 text-lg font-semibold">
+                What is your primary financial goal?
+              </span>
+            </label>
+            <input
+              type="text"
+              placeholder="e.g., Save for an emergency fund of $40,000, buy a house worth $250,000"
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              className="input input-bordered w-full hover:shadow-lg transition-all"
+            />
+            <p className="text-sm text-gray-500 mt-2">
+              Tip: Be specific about your goal for better advice. For example,
+              "Build a retirement fund of $500,000 by age 60,' or 'Save $10,000
+              for a dream vacation in the next 12 months."
+            </p>
+          </div>
+
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text text-gray-700 text-lg font-semibold">
+                Timeframe to achieve your goal (in months)
+              </span>
+            </label>
+            <input
+              type="number"
+              placeholder="e.g., 12"
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              className="input input-bordered w-full hover:shadow-lg transition-all"
+            />
+          </div>
+
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text text-gray-700 text-lg font-semibold">
+                Monthly Income
+              </span>
+            </label>
+            <input
+              type="number"
+              placeholder="Enter your monthly income"
+              value={monthlyIncome}
+              onChange={(e) => setMonthlyIncome(e.target.value)}
+              className="input input-bordered w-full hover:shadow-lg transition-all"
+            />
+          </div>
+
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text text-gray-700 text-lg font-semibold">
+                Monthly Expenses
+              </span>
+            </label>
+            <input
+              type="number"
+              placeholder="Enter your monthly expenses"
+              value={monthlyExpenses}
+              onChange={(e) => setMonthlyExpenses(e.target.value)}
+              className="input input-bordered w-full hover:shadow-lg transition-all"
+            />
+          </div>
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text text-gray-700 text-lg font-semibold">
+                Total Debt
+              </span>
+            </label>
+            <input
+              type="number"
+              placeholder="Enter your total debt"
+              value={debt}
+              onChange={(e) => setDebt(e.target.value)}
+              className="input input-bordered w-full hover:shadow-lg transition-all"
+            />
+          </div>
+
+          <div className="form-control mb-6">
+            <label className="label">
+              <span className="label-text text-gray-700 text-lg font-semibold">
+                Current Savings
+              </span>
+            </label>
+            <input
+              type="number"
+              placeholder="Enter your total savings"
+              value={savings}
+              onChange={(e) => setSavings(e.target.value)}
+              className="input input-bordered w-full hover:shadow-lg transition-all"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary w-full mt-4 text-lg py-2 sm:py-3 md:py-[clamp(0.5rem, 2vw, 1.5rem)] leading-normal hover:scale-105 active:scale-95 transition-transform"
+          >
+            Build My Financial Strategy
+          </button>
+        </form>
+
+        {response && (
+          <div className="relative flex flex-col overflow-y-auto max-h-screen mt-8 p-6 bg-white shadow-md rounded-lg w-full lg:w-2/3 mx-auto z-20">
+            <h2 className="text-2xl font-semibold text-blue-700">
+              Strategic Planning Insights
+            </h2>
+            {/* Render each line of the response separately */}
+            <div className="mt-4 text-gray-800 space-y-2 z-10">
+              {response.split("\n").map((line, index) => (
+                <p key={index} className="leading-relaxed">
+                  {line.trim()}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* PDF Button */}
+        <button
+          onClick={generatePDF}
+          className="btn btn-outline  mt-8 mx-auto block px-6 py-3 rounded"
+        >
+          Download PDF
         </button>
-      </form>
 
-      {response && (
-        <div className="flex flex-col overflow-y-auto max-h-screen mt-8 p-6 bg-white shadow-md rounded-lg w-full lg:w-2/3 mx-auto">
-          <h2 className="text-2xl font-semibold text-blue-700">
-            Strategic Planning Insights
+        {/* Graphs */}
+        <div className="mt-12">
+          <h2 className="text-3xl font-bold text-center mb-6">
+            Financial Overview
           </h2>
-          {/* Render each line of the response separately */}
-          <div className="mt-4 text-gray-800 space-y-2">
-            {response.split("\n").map((line, index) => (
-              <p key={index} className="leading-relaxed">
-                {line.trim()}
-              </p>
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* PDF Button */}
-      <button
-        onClick={generatePDF}
-        className="btn btn-outline btn-secondary mt-8 mx-auto block px-6 py-3 rounded"
-      >
-        Download PDF
-      </button>
-
-      {/* Graphs */}
-      <div className="mt-12">
-        <h2 className="text-3xl font-bold text-center mb-6">
-          Financial Overview
-        </h2>
-
-        <div className="flex flex-wrap justify-center gap-8">
-          {/* Bar Chart */}
-          <div className="w-full lg:w-1/3 hover:shadow-lg transition-all rounded-lg">
-            <h3 className="text-xl font-semibold text-center mb-4">
-              Savings vs. Expenses
-            </h3>
-            <BarChart
-              width={300}
-              height={250}
-              data={savingsVsExpensesData}
-              margin={{ top: 20, right: 20, left: 0, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#6D83F2" />
-            </BarChart>
-          </div>
-
-          {/* Pie Chart */}
-          <div className="w-full lg:w-1/3 hover:shadow-lg transition-all rounded-lg">
-            <h3 className="text-xl font-semibold text-center mb-4">
-              Income Allocation
-            </h3>
-            <PieChart width={300} height={300}>
-              <Pie
-                data={incomeAllocationData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                fill="#82ca9d"
-                label
+          <div className="flex flex-wrap justify-center gap-8">
+            {/* Bar Chart */}
+            <div className="w-full lg:w-1/3 hover:shadow-lg transition-all rounded-lg">
+              <h3 className="text-xl font-semibold text-center mb-4">
+                Savings vs. Expenses
+              </h3>
+              <BarChart
+                width={300}
+                height={250}
+                data={savingsVsExpensesData}
+                margin={{ top: 20, right: 20, left: 0, bottom: 5 }}
               >
-                {incomeAllocationData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </div>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#6D83F2" />
+              </BarChart>
+            </div>
 
-          {/* Future Savings Line Chart */}
-          <div className="w-full lg:w-1/3 hover:shadow-lg transition-all rounded-lg">
-            <h3 className="text-xl font-semibold text-center mb-4">
-              Future Savings
-            </h3>
-            <LineChart
-              width={300}
-              height={250}
-              data={futureSavingsData}
-              margin={{ top: 20, right: 20, left: 0, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="savings" stroke="#F26292" />
-            </LineChart>
+            {/* Pie Chart */}
+            <div className="w-full lg:w-1/3 hover:shadow-lg transition-all rounded-lg">
+              <h3 className="text-xl font-semibold text-center mb-4">
+                Income Allocation
+              </h3>
+              <PieChart width={400} height={400}>
+                <Pie
+                  data={incomeAllocationData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#82ca9d"
+                  label
+                >
+                  {incomeAllocationData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </div>
+            {/* Debt-to-Income Ratio Bar Chart */}
+            <div className="w-full lg:w-1/3 hover:shadow-lg transition-all rounded-lg">
+              <h3 className="text-xl font-semibold text-center mb-4">
+                Debt-to-Income Ratio
+              </h3>
+              <BarChart
+                width={300}
+                height={250}
+                data={[
+                  { name: "Your Ratio", value: debtToIncomeRatio },
+                  { name: "Recommended Max", value: 36 },
+                ]}
+                margin={{ top: 20, right: 20, left: 0, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#FF8042" />
+              </BarChart>
+            </div>
+
+            {/* Future Savings Line Chart */}
+            <div className="w-full lg:w-1/3 hover:shadow-lg transition-all rounded-lg">
+              <h3 className="text-xl font-semibold text-center mb-4">
+                Future Savings
+              </h3>
+              <LineChart
+                width={300}
+                height={250}
+                data={futureSavingsData}
+                margin={{ top: 20, right: 20, left: 0, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="savings" stroke="#F26292" />
+              </LineChart>
+            </div>
           </div>
         </div>
       </div>

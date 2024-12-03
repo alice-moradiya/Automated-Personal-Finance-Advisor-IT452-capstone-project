@@ -32,20 +32,6 @@ const Dashboard = () => {
           }`}
         >
           <img src="/photo1.png" className="w-full" alt="Slide 1" />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <button
-              onClick={() => navigateToSlide(4)}
-              className="btn btn-circle"
-            >
-              ❮
-            </button>
-            <button
-              onClick={() => navigateToSlide(2)}
-              className="btn btn-circle"
-            >
-              ❯
-            </button>
-          </div>
         </div>
 
         {/* Slide 2 */}
@@ -56,20 +42,6 @@ const Dashboard = () => {
           }`}
         >
           <img src="/photo2.jpg" className="w-full" alt="Slide 2" />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <button
-              onClick={() => navigateToSlide(1)}
-              className="btn btn-circle"
-            >
-              ❮
-            </button>
-            <button
-              onClick={() => navigateToSlide(3)}
-              className="btn btn-circle"
-            >
-              ❯
-            </button>
-          </div>
         </div>
 
         {/* Slide 3 */}
@@ -80,20 +52,6 @@ const Dashboard = () => {
           }`}
         >
           <img src="/photo3.jpg" className="w-full" alt="Slide 3" />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <button
-              onClick={() => navigateToSlide(2)}
-              className="btn btn-circle"
-            >
-              ❮
-            </button>
-            <button
-              onClick={() => navigateToSlide(4)}
-              className="btn btn-circle"
-            >
-              ❯
-            </button>
-          </div>
         </div>
 
         {/* Slide 4 */}
@@ -103,31 +61,15 @@ const Dashboard = () => {
             currentSlide === 4 ? "block" : "hidden"
           }`}
         >
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
-            className="w-full"
-            alt="Slide 4"
-          />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <button
-              onClick={() => navigateToSlide(3)}
-              className="btn btn-circle"
-            >
-              ❮
-            </button>
-            <button
-              onClick={() => navigateToSlide(1)}
-              className="btn btn-circle"
-            >
-              ❯
-            </button>
-          </div>
+          <img src="/photo4.jpg" className="w-full" alt="Slide 4" />
         </div>
       </div>
 
       {/* Timeline */}
       <div id="timeline" className="container mx-auto mt-12 px-4">
-        <h2 className="text-2xl font-bold text-center mb-4">How It Works</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">
+          How It <span className="text-blue-700">Works</span>
+        </h2>
         <ul className="timeline justify-center ">
           <li className="flex flex-col sm:flex-row items-center">
             <div className="timeline-start timeline-box text-center sm:text-left w-full sm:w-full">
@@ -213,7 +155,7 @@ const Dashboard = () => {
       <div className="text-center mt-12">
         <Link
           to="/goals"
-          className="btn btn-primary hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all duration-300 mb-14"
+          className="btn bg-blue-700 text-white hover:bg-blue-500 hover:text-blue-50 hover:scale-105 active:scale-95 transition-all duration-300 mb-14"
         >
           Get Started
         </Link>
