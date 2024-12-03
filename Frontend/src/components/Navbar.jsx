@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 function Navbar() {
   return (
     <>
-      <div className="navbar bg-base-100">
+      <div className="navbar bg-base-100 sticky top-0 z-50 shadow-md">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost">
-              
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-7 w-7"
@@ -29,20 +28,17 @@ function Navbar() {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 shadow"
             >
               <li>
-                <Link to="/">Dashboard</Link>
+                <Link to="/">Home</Link>
               </li>
               <li>
                 <Link to="/goals">Financial Goals</Link>
               </li>
-              <li>
-                <Link to="/">Advice</Link>
-              </li>
-              <li>
-                <Link to="/">Profile</Link>
-              </li>
             </ul>
           </div>
-          <Link to="/" className="text-2xl sm:text-2xl sm:px-4 font-bold cursor-pointer ">
+          <Link
+            to="/"
+            className="text-2xl sm:text-2xl sm:px-4 font-bold cursor-pointer "
+          >
             Finance Advisor
           </Link>
         </div>

@@ -29,15 +29,38 @@ const Goals = () => {
     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
     const prompt = `
-      Please create a personalized financial plan based on the following user inputs. Format the response as numbered points, 
-      with each point clearly separated on a new line for better readability. Avoid overly technical language and make it user-friendly, 
-      Give user some insights about what will be the best onlin real website to check and read more about specific data as well:
-      - Financial Goal: ${goal}
-      - Timeframe: ${timeframe} months
-      - Monthly Income: $${monthlyIncome}
-      - Monthly Expenses: $${monthlyExpenses}
-      - Current Savings: $${savings}
-    `;
+  Please create a professional and concise personalized financial plan based on the following user inputs. 
+  Format the response as numbered points for clarity and readability. Avoid adding any signatures, placeholders 
+  like [Your Name], or additional elements that are not explicitly requested. Ensure the response is user-friendly 
+  and actionable. Include trusted and real online resources(actual site link from internet which is active) for further reading when relevant. Ensure that the response is strictly 
+  lawful, ethical, and focused on financial planning only. If any input appears to involve illegal, unethical, 
+  or harmful activities (e.g., human organ trade, fraud, or crime), respond clearly with the statement: 
+  "I cannot assist with this request as it involves illegal or unethical activities.
+
+  User Inputs:
+  - Financial Goal: ${
+    goal || "Not Provided"
+  } (If not provided, suggest specifying a clear financial goal.)
+  - Timeframe: ${
+    timeframe || "Not Provided"
+  } months (If not provided, suggest defining a realistic timeframe.)
+  - Monthly Income: $${
+    monthlyIncome || "Not Provided"
+  } (If not provided, ask for income details to create an accurate plan.)
+  - Monthly Expenses: $${
+    monthlyExpenses || "Not Provided"
+  } (If not provided, ask for expense details to analyze the budget.)
+  - Current Savings: $${
+    savings || "Not Provided"
+  } (If not provided, suggest estimating current savings.)
+
+  Please note:
+  1. Ensure the response focuses solely on the user's input and the requested financial advice.
+  2. Avoid any personalization that includes names, signatures, or placeholders such as [Your Name].
+  3. Provide clear and ethical financial advice, referencing trusted online sources like Investopedia or government financial websites.
+  4. Do not provide advice or engage in topics that involve illegal, unethical, or harmful activities.
+  5. Focus only on ethical and lawful financial advice based on the provided inputs.
+`;
 
     try {
       const { data } = await axios.post(
@@ -89,41 +112,68 @@ const Goals = () => {
   const COLORS = ["#6D83F2", "#F26292", "#F5A623"];
 
   const generatePDF = async () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF("p", "mm", "a4");
+    const pageHeight = doc.internal.pageSize.height; // A4 height
+    let currentY = 10; // Starting vertical position
 
     // Add Title
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
-    doc.text("Personalized Financial Report", 10, 10);
+    doc.text("Personalized Financial Report", 10, currentY);
+    currentY += 20;
 
     // Add User Data
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.text("User Inputs:", 10, 30);
-    doc.text(`Financial Goal: ${goal}`, 10, 40);
-    doc.text(`Timeframe: ${timeframe} months`, 10, 50);
-    doc.text(`Monthly Income: $${monthlyIncome}`, 10, 60);
-    doc.text(`Monthly Expenses: $${monthlyExpenses}`, 10, 70);
-    doc.text(`Current Savings: $${savings}`, 10, 80);
+    const addTextWithPageBreak = (text, yIncrement = 10) => {
+      if (currentY + yIncrement > pageHeight - 10) {
+        doc.addPage(); // Add a new page
+        currentY = 10; // Reset to the top of the new page
+      }
+      doc.text(text, 10, currentY);
+      currentY += yIncrement;
+    };
+
+    addTextWithPageBreak("Your Goals:");
+    addTextWithPageBreak(`Financial Goal: ${goal}`);
+    addTextWithPageBreak(`Timeframe: ${timeframe} months`);
+    addTextWithPageBreak(`Monthly Income: $${monthlyIncome}`);
+    addTextWithPageBreak(`Monthly Expenses: $${monthlyExpenses}`);
+    addTextWithPageBreak(`Current Savings: $${savings}`);
 
     // Add AI Response
     if (response) {
-      doc.setFontSize(14);
-      doc.text("AI Advice:", 10, 100);
-      const lines = doc.splitTextToSize(response, 180); // Wrap text to fit
-      doc.text(lines, 10, 110);
+      addTextWithPageBreak("Your Financial Roadmap:", 20);
+      const lines = doc.splitTextToSize(response, 180);
+      lines.forEach((line) => addTextWithPageBreak(line, 7));
     }
 
     // Capture and Add Graphs
-    const chartContainer = document.querySelectorAll(".chart-container");
-    for (let i = 0; i < chartContainer.length; i++) {
-      const canvas = await html2canvas(chartContainer[i]);
+    const chartContainers = document.querySelectorAll(".chart-container");
+    for (let i = 0; i < chartContainers.length; i++) {
+      const container = chartContainers[i];
+
+      // Ensure the chart is rendered
+      const canvas = await html2canvas(container, {
+        useCORS: true, // Ensure cross-origin images are captured
+        scale: 2, // Increase resolution for better quality
+      });
+
       const imgData = canvas.toDataURL("image/png");
-      const positionY = 130 + i * 100;
-      doc.addImage(imgData, "PNG", 10, positionY, 180, 80);
+      const imgHeight = 80; // Image height in mm
+      const imgWidth = 180; // Image width in mm
+
+      // Check if the image fits on the current page
+      if (currentY + imgHeight > pageHeight - 10) {
+        doc.addPage(); // Add new page if the image doesn't fit
+        currentY = 10; // Reset position
+      }
+
+      doc.addImage(imgData, "PNG", 10, currentY, imgWidth, imgHeight);
+      currentY += imgHeight + 10; // Move to the next position
     }
 
-    // Saving the PDF
+    // Save the PDF
     doc.save("Financial_Report.pdf");
   };
 
@@ -145,11 +195,16 @@ const Goals = () => {
           </label>
           <input
             type="text"
-            placeholder="e.g., Save for an emergency fund, buy a house"
+            placeholder="e.g., Save for an emergency fund of $40,000, buy a house worth $250,000"
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             className="input input-bordered w-full hover:shadow-lg transition-all"
           />
+          <p className="text-sm text-gray-500 mt-2">
+            Tip: Be specific about your goal for better advice. For example,
+            "Build a retirement fund of $500,000 by age 60,' or 'Save $10,000
+            for a dream vacation in the next 12 months."
+          </p>
         </div>
 
         <div className="form-control mb-6">
@@ -200,7 +255,7 @@ const Goals = () => {
         <div className="form-control mb-6">
           <label className="label">
             <span className="label-text text-gray-700 text-lg font-semibold">
-              Total Savings
+              Current Savings
             </span>
           </label>
           <input
@@ -214,22 +269,32 @@ const Goals = () => {
 
         <button
           type="submit"
-          className="btn btn-primary w-full mt-4 text-lg hover:scale-105 active:scale-95 transition-transform"
+          className="btn btn-primary w-full mt-4 text-lg py-2 sm:py-3 md:py-[clamp(0.5rem, 2vw, 1.5rem)] leading-normal hover:scale-105 active:scale-95 transition-transform"
         >
-          Get Financial Advice
+          Build My Financial Strategy
         </button>
       </form>
 
       {response && (
         <div className="flex flex-col overflow-y-auto max-h-screen mt-8 p-6 bg-white shadow-md rounded-lg w-full lg:w-2/3 mx-auto">
-          <h2 className="text-2xl font-semibold text-blue-700">AI Response</h2>
-          <p className="mt-4 text-gray-800 overflow-y-auto">{response}</p>
+          <h2 className="text-2xl font-semibold text-blue-700">
+            Strategic Planning Insights
+          </h2>
+          {/* Render each line of the response separately */}
+          <div className="mt-4 text-gray-800 space-y-2">
+            {response.split("\n").map((line, index) => (
+              <p key={index} className="leading-relaxed">
+                {line.trim()}
+              </p>
+            ))}
+          </div>
         </div>
       )}
+
       {/* PDF Button */}
       <button
         onClick={generatePDF}
-        className="btn bg-green-500 text-white mt-8 mx-auto block px-6 py-3 rounded hover:bg-green-600"
+        className="btn btn-outline btn-secondary mt-8 mx-auto block px-6 py-3 rounded"
       >
         Download PDF
       </button>
