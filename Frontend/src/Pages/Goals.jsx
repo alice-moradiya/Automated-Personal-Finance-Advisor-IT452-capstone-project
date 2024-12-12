@@ -203,7 +203,7 @@ const Goals = () => {
           backgroundImage: "url('/bg.jpg')",
         }}
       ></div> */}
-      <div className="p-8 bg-gray-100 min-h-screen">
+      <div className="py-6 bg-gray-100 min-h-screen">
         <h1 className="text-4xl font-bold mb-8 text-center text-black hover:scale-105 transition-transform">
           Set Your Financial <span className="text-pink-500">Goals </span>
         </h1>
@@ -308,7 +308,7 @@ const Goals = () => {
 
           <button
             type="submit"
-            className="btn btn-primary w-full mt-4 text-lg py-2 sm:py-3 md:py-[clamp(0.5rem, 2vw, 1.5rem)] leading-normal hover:scale-105 active:scale-95 transition-transform"
+            className="btn btn-primary w-full text-base sm:text-lg sm:py-3 md:py-1 leading-normal hover:scale-105 active:scale-95 transition-transform"
           >
             Build My Financial Strategy
           </button>
