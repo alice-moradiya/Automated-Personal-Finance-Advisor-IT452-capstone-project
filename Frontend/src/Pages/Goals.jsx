@@ -24,9 +24,11 @@ const Goals = () => {
   const [savings, setSavings] = useState("");
   const [response, setResponse] = useState(null);
   const [debt, setDebt] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
     const prompt = `
@@ -92,6 +94,8 @@ const Goals = () => {
     } catch (error) {
       console.error("Error fetching the AI response:", error);
       setResponse("Something went wrong. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -308,11 +312,23 @@ const Goals = () => {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="btn btn-primary w-full text-base sm:text-lg sm:py-3 md:py-1 leading-normal hover:scale-105 active:scale-95 transition-transform"
           >
-            Build My Financial Strategy
+            {isLoading ? "Generating Strategy..." : "Build My Financial Strategy"}
           </button>
         </form>
+
+        {/* Loading Popup */}
+        {isLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-lg shadow-xl text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto mb-4"></div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">Generating Your Strategy</h3>
+              <p className="text-gray-600">Please wait for a few seconds...</p>
+            </div>
+          </div>
+        )}
 
         {response && (
           <div className="relative flex flex-col overflow-y-auto max-h-screen mt-8 p-6 bg-white shadow-md rounded-lg w-full lg:w-2/3 mx-auto z-20">
