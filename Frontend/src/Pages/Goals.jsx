@@ -33,12 +33,12 @@ const Goals = () => {
 
     const prompt = `
   Please create a professional and concise personalized financial plan based on the following user inputs(Make in depth plan which is also easy for user to understand). 
-  Format the response as numbered points for clarity and readability. Avoid adding any signatures, placeholders 
+  Format (BUT NOT BOLD, ITLAIC, UNDERLINE THE HEADINGS) the response as numbered points for clarity and readability. Avoid adding any signatures, placeholders 
   like [Your Name], or additional elements that are not explicitly requested. Ensure the response is user-friendly 
   and actionable. Include trusted and real online resources(actual site link from internet which is active) for further reading when relevant. Ensure that the response is strictly 
   lawful, ethical, and focused on financial planning only. If any input appears to involve illegal, unethical, 
   or harmful activities (e.g., human organ trade, fraud, or crime), respond clearly with the statement: 
-  "I cannot assist with this request as it involves illegal or unethical activities.
+  "I cannot assist with this request as it involves illegal or unethical activities." 
 
   User Inputs:
   - Financial Goal: ${

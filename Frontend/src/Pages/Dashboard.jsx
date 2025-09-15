@@ -75,12 +75,13 @@ const Dashboard = () => {
             <div className="timeline-start timeline-box text-center sm:text-left w-full sm:w-full">
               Start
             </div>
-            <div className="timeline-middle flex justify-center items-center w-full sm:w-1/6">
+            <div className="timeline-middle flex justify-center items-center w-full sm:w-1/6 relative">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 className="h-5 w-5"
+                style={{ zIndex: 10 }}
               >
                 <path
                   fillRule="evenodd"
@@ -88,8 +89,8 @@ const Dashboard = () => {
                   clipRule="evenodd"
                 />
               </svg>
+              <hr className="absolute top-1/2 left-1/2 w-full sm:w-auto sm:relative sm:top-auto sm:left-auto transform -translate-y-1/2 sm:transform-none" />
             </div>
-            <hr />
           </li>
           <li>
             <hr />
@@ -99,6 +100,7 @@ const Dashboard = () => {
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 className="h-5 w-5"
+                style={{ zIndex: 10 }}
               >
                 <path
                   fillRule="evenodd"
@@ -119,6 +121,7 @@ const Dashboard = () => {
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 className="h-5 w-5"
+                style={{ zIndex: 10 }}
               >
                 <path
                   fillRule="evenodd"
@@ -138,6 +141,7 @@ const Dashboard = () => {
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 className="h-5 w-5"
+                style={{ zIndex: 10 }}
               >
                 <path
                   fillRule="evenodd"
@@ -146,7 +150,7 @@ const Dashboard = () => {
                 />
               </svg>
             </div>
-            <hr />
+            
           </li>
         </ul>
       </div>
