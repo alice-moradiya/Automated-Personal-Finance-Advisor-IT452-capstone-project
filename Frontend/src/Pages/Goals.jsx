@@ -29,7 +29,7 @@ const Goals = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    const apiKey = import.meta.env.OPENAI_API_KEY;
 
     const prompt = `
   Please create a professional and concise personalized financial plan based on the following user inputs(Make in depth plan which is also easy for user to understand). 
